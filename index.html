@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TH SYSTEM | V7.9 ULTRA SECURITY</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        :root { 
+            --main: #00ff88; 
+            --bg: #020202; 
+            --card: rgba(12, 12, 12, 0.98); 
+            --border: #00ff8844; 
+            --glow: 0 0 25px rgba(0, 255, 136, 0.3); 
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-family: 'Rajdhani', sans-serif; outline: none; }
+        
+        body { background: var(--bg); color: #fff; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+
+        /* FUNDO ANIMADO */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, #00ff8805 0%, transparent 100%);
+            z-index: -1;
+            animation: pulseBg 8s infinite alternate;
+        }
+
+        @keyframes pulseBg {
+            from { opacity: 0.3; }
+            to { opacity: 0.8; }
+        }
+
+        /* TELA DE LOGIN MASTER */
+        #login-screen { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; align-items: center; justify-content: center; }
+        .login-card { 
+            width: 350px; padding: 30px; background: var(--card); border: 1px solid var(--main); 
+            border-radius: 20px; text-align: center; box-shadow: var(--glow); 
+            animation: fadeInDown 0.8s;
+        }
+
+        /* MENU LATERAL */
+        nav { 
+            width: 260px; background: #000; border-right: 1px solid #111; 
+            display: flex; flex-direction: column; padding: 20px; z-index: 100; 
+            animation: fadeInLeft 0.6s;
+        }
+        .logo-box { text-align: center; margin-bottom: 40px; }
+        .logo-box h1 { 
+            font-family: 'Orbitron'; color: var(--main); margin: 0; font-size: 22px; 
+            text-shadow: 0 0 15px var(--main); animation: pulse 2s infinite; 
+        }
+        
+        .nav-link { 
+            background: transparent; border: none; color: #555; padding: 15px; 
+            cursor: pointer; border-radius: 10px; margin-bottom: 10px; text-align: left; 
+            font-weight: 700; font-size: 16px; display: flex; align-items: center; 
+        }
+        .nav-link:hover { transform: translateX(10px); color: var(--main); background: rgba(0, 255, 136, 0.05); }
+        .nav-link.active { background: rgba(0, 255, 136, 0.08); color: var(--main); box-shadow: inset 4px 0 0 var(--main); }
+
+        /* AREA DE CONTEÚDO */
+        main { flex: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at top right, #00ff8808, transparent); }
+        .tab { display: none; }
+        .tab.active { display: block; animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        /* ESTILO DOS CARDS */
+        .card { 
+            background: var(--card); border: 1px solid #1a1a1a; padding: 25px; 
+            border-radius: 15px; margin-bottom: 25px; position: relative; 
+            overflow: hidden;
+        }
+        .card:hover { border-color: var(--main); box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(-5px); }
+        
+        .card::after {
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(transparent, rgba(0,255,136,0.03), transparent);
+            transform: rotate(45deg); transition: 0.5s; pointer-events: none;
+        }
+        .card:hover::after { left: 100%; transition: 0.8s; }
+
+        .title { font-family: 'Orbitron'; color: var(--main); font-size: 12px; letter-spacing: 2px; margin-bottom: 20px; display: block; text-transform: uppercase; }
+        
+        input, select { width: 100%; background: #080808; border: 1px solid #1a1a1a; color: #fff; padding: 14px; border-radius: 10px; margin-bottom: 15px; font-size: 15px; }
+        input:focus { border-color: var(--main); box-shadow: 0 0 15px rgba(0, 255, 136, 0.2); transform: scale(1.01); }
+
+        .btn { 
+            background: var(--main); color: #000; padding: 14px; border: none; border-radius: 10px; 
+            font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; 
+        }
+        .btn:hover { filter: brightness(1.2); box-shadow: var(--glow); transform: scale(1.03); }
+        .btn:active { transform: scale(0.95); }
+        .btn-red { background: #ff3333; color: #fff; }
+
+        /* TABELA DE USUÁRIOS */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; color: #444; font-size: 12px; padding: 10px; text-transform: uppercase; }
+        td { padding: 15px 10px; border-bottom: 1px solid #111; font-size: 15px; animation: fadeInRight 0.5s; }
+        .code { color: var(--main); font-family: monospace; background: #000; padding: 4px 8px; border-radius: 5px; border: 1px solid #111; }
+
+        /* STATUS ONLINE */
+        .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .online { background: #00ff88; box-shadow: 0 0 10px #00ff88; animation: flash 1.5s infinite; }
+        .offline { background: #333; }
+
+        #ai-result { background: #050505; color: #00ff88; font-family: 'Courier New', monospace; padding: 20px; border-radius: 10px; border: 1px solid #111; margin-top: 20px; display: none; white-space: pre-wrap; font-size: 13px; line-height: 1.5; animation: fadeInUp 0.5s; }
+
+        /* SCROLLBAR CUSTOM */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--main); }
+
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-card animate__animated animate__zoomIn">
+            <h2 style="font-family:'Orbitron'; color:var(--main); margin-bottom:5px">TERMINAL TH</h2>
+            <p style="color:#444; font-size:12px; margin-bottom:25px">Acesso Restrito ao Desenvolvedor</p>
+            <input type="text" id="master-u" placeholder="USUÁRIO">
+            <input type="password" id="master-p" placeholder="SENHA">
+            <button class="btn" onclick="checkLogin()">AUTENTICAR SISTEMA</button>
+        </div>
+    </div>
+
+    <nav>
+        <div class="logo-box">
+            <h1>TH SYSTEM</h1>
+            <small style="color:#222; font-weight:bold; letter-spacing:3px">V7.9 SUPREME</small>
+        </div>
+        <button class="nav-link active" onclick="openTab(event, 'dash')">📊 DASHBOARD</button>
+        <button class="nav-link" onclick="openTab(event, 'keys')">🔑 GESTÃO DE KEYS</button>
+        <button class="nav-link" onclick="openTab(event, 'staff')">🛡️ EQUIPE STAFF</button>
+        <button class="nav-link" onclick="openTab(event, 'ia')">🤖 IA GENERATOR</button>
+        <div style="margin-top: auto;">
+            <button class="btn btn-red" onclick="location.reload()">SAIR DO TERMINAL</button>
+        </div>
+    </nav>
+
+    <main>
+        <div id="dash" class="tab active">
+            <div class="card animate__animated animate__fadeIn">
+                <span class="title">Status do Servidor</span>
+                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; text-align:center">
+                    <div><h4 style="color:#444; margin:0">CLIENTES ONLINE</h4><h2 id="count-online" style="color:var(--main); margin:10px 0">0</h2></div>
+                    <div><h4 style="color:#444; margin:0">TOTAL DE KEYS</h4><h2 id="count-total" style="color:#fff; margin:10px 0">0</h2></div>
+                    <div><h4 style="color:#444; margin:0">SISTEMA KICK</h4><h2 style="color:var(--main); margin:10px 0">ATIVO ✓</h2></div>
+                </div>
+            </div>
+            <div class="card animate__animated animate__fadeIn" style="animation-delay: 0.2s;">
+                <span class="title">Broadcast Global (Mensagem no Jogo)</span>
+                <input type="text" id="msg-global" placeholder="Digite o aviso que aparecerá para todos no script...">
+                <button class="btn" onclick="sendNotice()">PUBLICAR NO SCRIPT</button>
+            </div>
+        </div>
+
+        <div id="keys" class="tab">
+            <div class="card">
+                <span class="title">Gerar Novo Acesso</span>
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px">
+                    <input type="text" id="new-u" placeholder="Nome do Cliente">
+                    <input type="text" id="new-k" placeholder="Key de Acesso">
+                    <select id="new-t">
+                        <option value="1">1 DIA (TESTE)</option>
+                        <option value="7">7 DIAS (SEMANAL)</option>
+                        <option value="30">30 DIAS (MENSAL)</option>
+                        <option value="0">PERMANENTE</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:10px">
+                    <button class="btn" style="background:#222; color:#fff" onclick="autoFill()">⚡ GERAR ALEATÓRIO</button>
+                    <button class="btn" onclick="createKey()">CADASTRAR NO FIREBASE</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <span class="title">Controle de Usuários & Kick Real-Time</span>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CLIENTE</th>
+                            <th>KEY</th>
+                            <th>USO</th>
+                            <th>AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="staff" class="tab">
+            <div class="card">
+                <span class="title">Adicionar Moderador / Vendedor</span>
+                <input type="text" id="st-u" placeholder="Login do Staff">
+                <input type="password" id="st-p" placeholder="Senha do Staff">
+                <select id="st-c">
+                    <option value="vendedor">VENDEDOR</option>
+                    <option value="admin">ADMINISTRADOR</option>
+                </select>
+                <button class="btn" onclick="addStaff()">CADASTRAR STAFF</button>
+            </div>
+            <div class="card">
+                <table><tbody id="staff-table"></tbody></table>
+            </div>
+        </div>
+
+        <div id="ia" class="tab">
+            <div class="card">
+                <span class="title">Gerador de Remotes (TH-AI)</span>
+                <input type="text" id="ia-prompt" placeholder="Ex: Criar um Farm de Dinheiro automático para o jogo tal...">
+                <button class="btn" onclick="generateAI()">GERAR CÓDIGO LUA</button>
+                <div id="ai-result"></div>
+                <button id="btn-copy-ia" class="btn" style="display:none; margin-top:10px; background:#222; color:#fff" onclick="copyIA()">COPIAR SCRIPT</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const firebaseConfig = { databaseURL: "https://th-system-database-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function checkLogin() {
+            const u = document.getElementById('master-u').value;
+            const p = document.getElementById('master-p').value;
+            if(u === "TH" && p === "SYSTEM") {
+                document.getElementById('login-screen').classList.replace('animate__zoomIn', 'animate__fadeOut');
+                setTimeout(() => { document.getElementById('login-screen').style.display = 'none'; }, 500);
+                initSystem();
+            } else { alert("Acesso Negado!"); }
+        }
+
+        function openTab(e, id) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            e.currentTarget.classList.add('active');
+        }
+
+        function autoFill() {
+            document.getElementById('new-u').value = "USER-" + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('new-k').value = "TH-" + Math.random().toString(36).substring(2, 9).toUpperCase();
+        }
+
+        function createKey() {
+            const u = document.getElementById('new-u').value;
+            const k = document.getElementById('new-k').value;
+            const t = parseInt(document.getElementById('new-t').value);
+            if(!u || !k) return alert("Preencha tudo!");
+            
+            const exp = t === 0 ? 0 : Date.now() + (t * 86400000);
+            db.ref('users/' + u).set({
+                key: k,
+                expiry: exp,
+                isUsing: false,
+                plan: t === 0 ? "PERMANENTE" : t + " DIAS"
+            }).then(() => { alert("Key Criada com Sucesso!"); autoFill(); });
+        }
+
+        function initSystem() {
+            db.ref('users').on('value', snap => {
+                const table = document.getElementById('user-table');
+                table.innerHTML = "";
+                let total = 0; let online = 0;
+                const agora = Date.now();
+
+                snap.forEach(user => {
+                    const data = user.val();
+                    if(data.expiry !== 0 && agora > data.expiry) {
+                        db.ref('users/' + user.key).remove();
+                    } else {
+                        total++;
+                        if(data.isUsing) online++;
+                        
+                        table.innerHTML += `
+                            <tr>
+                                <td><b>${user.key}</b></td>
+                                <td><span class="code">${data.key}</span></td>
+                                <td>
+                                    <span class="status-dot ${data.isUsing?'online':'offline'}"></span>
+                                    <small style="color:${data.isUsing?'#00ff88':'#444'}">${data.isUsing?'EM USO':'OFFLINE'}</small>
+                                </td>
+                                <td>
+                                    <button class="btn" style="width:auto; padding:5px 10px; font-size:10px" onclick="copyText('${data.key}')">COPIAR</button>
+                                    <button class="btn btn-red" style="width:auto; padding:5px 10px; font-size:10px" onclick="if(confirm('DAR KICK E BANIR?')){ db.ref('users/${user.key}').remove() }">BANIR / KICK</button>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                });
+                document.getElementById('count-total').innerText = total;
+                document.getElementById('count-online').innerText = online;
+            });
+
+            db.ref('staff').on('value', snap => {
+                const table = document.getElementById('staff-table');
+                table.innerHTML = "";
+                snap.forEach(s => {
+                    table.innerHTML += `<tr><td>${s.key}</td><td>${s.val().cargo.toUpperCase()}</td><td><button class="btn btn-red" onclick="db.ref('staff/${s.key}').remove()">REMOVER</button></td></tr>`;
+                });
+            });
+        }
+
+        function addStaff() {
+            const u = document.getElementById('st-u').value;
+            const p = document.getElementById('st-p').value;
+            const c = document.getElementById('st-c').value;
+            if(u && p) db.ref('staff/' + u).set({ pass: p, cargo: c });
+        }
+
+        function sendNotice() {
+            const msg = document.getElementById('msg-global').value;
+            db.ref('settings/announcement').set(msg).then(() => alert("Aviso enviado!"));
+        }
+
+        function generateAI() {
+            const prompt = document.getElementById('ia-prompt').value;
+            const result = document.getElementById('ai-result');
+            if(!prompt) return;
+            
+            result.style.display = "block";
+            document.getElementById('btn-copy-ia').style.display = "block";
+            result.innerText = `-- [[ TH IA GENERATOR V2 ]]\n-- Sugestão de Código para: ${prompt}\n\nlocal Remote = game:GetService("ReplicatedStorage"):WaitForChild("MainEvent")\n\nwhile task.wait(1) do\n    Remote:FireServer("Farm", "${prompt}")\nend\n\nprint("Script Gerado com Sucesso por TH SYSTEM")`;
+        }
+
+        function copyIA() {
+            navigator.clipboard.writeText(document.getElementById('ai-result').innerText);
+            alert("Código Lua Copiado!");
+        }
+
+        function copyText(txt) {
+            navigator.clipboard.writeText(txt);
+            alert("Key Copiada!");
+        }
+    </script>
+</body>
+</html>
