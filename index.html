@@ -1,347 +1,1194 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TH SYSTEM | V7.9 ULTRA SECURITY</title>
+    <title>Hype RP - Loja Oficial</title>
+    <!-- Font Awesome para Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
     <style>
-        :root { 
-            --main: #00ff88; 
-            --bg: #020202; 
-            --card: rgba(12, 12, 12, 0.98); 
-            --border: #00ff8844; 
-            --glow: 0 0 25px rgba(0, 255, 136, 0.3); 
+        :root {
+            --primary: #8a2be2;
+            --primary-dark: #6a1b9a;
+            --primary-light: #b388ff;
+            --background: #0a0512;
+            --card-bg: #130924;
+            --text: #ffffff;
+            --text-muted: #a29bfe;
+            --success: #00ff88;
+            --danger: #ff3333;
+            --pix-color: #32bcad;
         }
 
-        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-family: 'Rajdhani', sans-serif; outline: none; }
-        
-        body { background: var(--bg); color: #fff; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-        /* FUNDO ANIMADO */
-        body::before {
-            content: "";
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* --- TELA DE ENTRADA (ANIMADA) --- */
+        #intro-screen {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, #00ff8805 0%, transparent 100%);
-            z-index: -1;
-            animation: pulseBg 8s infinite alternate;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: radial-gradient(circle, #1a0b2e 0%, #05020a 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeOut 1.2s ease 2.0s forwards;
         }
 
-        @keyframes pulseBg {
-            from { opacity: 0.3; }
-            to { opacity: 0.8; }
+        .intro-title {
+            font-size: 3rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #fff;
+            text-shadow: 0 0 20px var(--primary);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease 0.2s forwards;
+            text-align: center;
+            padding: 0 20px;
         }
 
-        /* TELA DE LOGIN MASTER */
-        #login-screen { position: fixed; inset: 0; background: #000; z-index: 2000; display: flex; align-items: center; justify-content: center; }
-        .login-card { 
-            width: 350px; padding: 30px; background: var(--card); border: 1px solid var(--main); 
-            border-radius: 20px; text-align: center; box-shadow: var(--glow); 
-            animation: fadeInDown 0.8s;
+        .intro-subtitle {
+            font-size: 1.5rem;
+            color: var(--primary-light);
+            margin-top: 15px;
+            opacity: 0;
+            animation: fadeIn 1s ease 0.8s forwards;
         }
 
-        /* MENU LATERAL */
-        nav { 
-            width: 260px; background: #000; border-right: 1px solid #111; 
-            display: flex; flex-direction: column; padding: 20px; z-index: 100; 
-            animation: fadeInLeft 0.6s;
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #130924;
+            border-top: 5px solid var(--primary-light);
+            border-radius: 50%;
+            margin-top: 30px;
+            animation: spin 1s linear infinite;
         }
-        .logo-box { text-align: center; margin-bottom: 40px; }
-        .logo-box h1 { 
-            font-family: 'Orbitron'; color: var(--main); margin: 0; font-size: 22px; 
-            text-shadow: 0 0 15px var(--main); animation: pulse 2s infinite; 
+
+        /* --- HEADER & NAV --- */
+        header {
+            background: linear-gradient(180deg, rgba(19,9,36,0.9) 0%, rgba(10,5,18,0) 100%);
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--primary-light);
+        }
+
+        .admin-toggle-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            color: var(--text-muted);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .admin-toggle-btn:hover {
+            color: #fff;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 15px;
+            background: rgba(138, 43, 226, 0.1);
+            padding: 6px;
+            border-radius: 30px;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 24px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+        }
+
+        /* --- CONTEÚDO PRINCIPAL --- */
+        main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            min-height: 40vh;
+        }
+
+        .tab-content {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .tab-content.active {
+            display: grid;
+        }
+
+        /* --- CARDS DOS PRODUTOS --- */
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(138, 43, 226, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-light);
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.2);
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        }
+
+        .product-icon {
+            font-size: 2.5rem;
+            color: var(--primary-light);
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(179, 136, 255, 0.3);
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .product-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .product-stock {
+            font-size: 0.8rem;
+            color: var(--primary-light);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .product-price {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--success);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+        }
+
+        .buy-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .buy-btn:hover:not(:disabled) {
+            background: var(--primary-light);
+            box-shadow: 0 0 15px var(--primary-light);
+            transform: scale(1.05);
+        }
+
+        .buy-btn:disabled {
+            background: #2d2d3d;
+            color: #777;
+            cursor: not-allowed;
+            border: 1px solid #444;
+        }
+
+        /* --- SEÇÃO DE FEEDBACKS REAIS --- */
+        .feedbacks-section {
+            max-width: 1200px;
+            margin: 80px auto 40px auto;
+            padding: 0 20px;
+        }
+
+        .feedback-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .feedback-container {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+
+        .feedback-form-box {
+            background: var(--card-bg);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            padding: 25px;
+            border-radius: 12px;
+            height: fit-content;
+        }
+
+        .feedbacks-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            max-height: 450px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .feedback-card {
+            background: rgba(19, 9, 36, 0.6);
+            border: 1px solid rgba(138, 43, 226, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .feedback-user {
+            font-weight: 600;
+            color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feedback-stars {
+            color: #ffd700;
+            font-size: 0.85rem;
+        }
+
+        .feedback-text {
+            color: #e0e0e0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .star-rating-input {
+            display: flex;
+            gap: 8px;
+            font-size: 1.3rem;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .star-rating-input i {
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .star-rating-input i.active {
+            color: #ffd700;
+        }
+
+        /* --- BOTÃO FLUTUANTE SUPORTE --- */
+        .support-float-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: #5865F2;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 20px rgba(88, 101, 242, 0.4);
+            z-index: 999;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .support-float-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(88, 101, 242, 0.6);
+            background: #4752c4;
+        }
+
+        /* --- MODAIS --- */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 2, 10, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.4);
+            animation: scaleUp 0.3s ease forwards;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 10px rgba(179, 136, 255, 0.3);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-confirm {
+            background: var(--success);
+            color: #05020a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        /* --- ELEMENTOS EXCLUSIVOS DO PIX AUTOMÁTICO --- */
+        .pix-container {
+            background: rgba(50, 188, 173, 0.05);
+            border: 1px dashed var(--pix-color);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 15px;
+        }
+        .pix-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--pix-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .pix-key-box {
+            background: rgba(0,0,0,0.4);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #ccc;
+            word-break: break-all;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .btn-pix-copy {
+            background: var(--pix-color);
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-pix-copy:hover {
+            box-shadow: 0 0 15px rgba(50, 188, 173, 0.4);
+            transform: scale(1.02);
         }
         
-        .nav-link { 
-            background: transparent; border: none; color: #555; padding: 15px; 
-            cursor: pointer; border-radius: 10px; margin-bottom: 10px; text-align: left; 
-            font-weight: 700; font-size: 16px; display: flex; align-items: center; 
+        /* Sistema de Loading Animado de 15s */
+        .pix-loading-box {
+            text-align: center;
+            padding: 20px 0;
         }
-        .nav-link:hover { transform: translateX(10px); color: var(--main); background: rgba(0, 255, 136, 0.05); }
-        .nav-link.active { background: rgba(0, 255, 136, 0.08); color: var(--main); box-shadow: inset 4px 0 0 var(--main); }
-
-        /* AREA DE CONTEÚDO */
-        main { flex: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at top right, #00ff8808, transparent); }
-        .tab { display: none; }
-        .tab.active { display: block; animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-
-        /* ESTILO DOS CARDS */
-        .card { 
-            background: var(--card); border: 1px solid #1a1a1a; padding: 25px; 
-            border-radius: 15px; margin-bottom: 25px; position: relative; 
+        .progress-bar-bg {
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            height: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
             overflow: hidden;
         }
-        .card:hover { border-color: var(--main); box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(-5px); }
-        
-        .card::after {
-            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(transparent, rgba(0,255,136,0.03), transparent);
-            transform: rotate(45deg); transition: 0.5s; pointer-events: none;
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            width: 0%;
+            border-radius: 5px;
         }
-        .card:hover::after { left: 100%; transition: 0.8s; }
-
-        .title { font-family: 'Orbitron'; color: var(--main); font-size: 12px; letter-spacing: 2px; margin-bottom: 20px; display: block; text-transform: uppercase; }
         
-        input, select { width: 100%; background: #080808; border: 1px solid #1a1a1a; color: #fff; padding: 14px; border-radius: 10px; margin-bottom: 15px; font-size: 15px; }
-        input:focus { border-color: var(--main); box-shadow: 0 0 15px rgba(0, 255, 136, 0.2); transform: scale(1.01); }
-
-        .btn { 
-            background: var(--main); color: #000; padding: 14px; border: none; border-radius: 10px; 
-            font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; 
+        /* Tela de Sucesso Final */
+        .success-box {
+            text-align: center;
+            padding: 10px 0;
         }
-        .btn:hover { filter: brightness(1.2); box-shadow: var(--glow); transform: scale(1.03); }
-        .btn:active { transform: scale(0.95); }
-        .btn-red { background: #ff3333; color: #fff; }
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success);
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            margin-bottom: 15px;
+        }
 
-        /* TABELA DE USUÁRIOS */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { text-align: left; color: #444; font-size: 12px; padding: 10px; text-transform: uppercase; }
-        td { padding: 15px 10px; border-bottom: 1px solid #111; font-size: 15px; animation: fadeInRight 0.5s; }
-        .code { color: var(--main); font-family: monospace; background: #000; padding: 4px 8px; border-radius: 5px; border: 1px solid #111; }
+        /* --- MODAL DO DONO --- */
+        #admin-modal {
+            max-width: 600px;
+        }
 
-        /* STATUS ONLINE */
-        .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
-        .online { background: #00ff88; box-shadow: 0 0 10px #00ff88; animation: flash 1.5s infinite; }
-        .offline { background: #333; }
+        /* --- FOOTER / CRÉDITOS --- */
+        footer {
+            background: #05020a;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid rgba(138, 43, 226, 0.1);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 50px;
+        }
 
-        #ai-result { background: #050505; color: #00ff88; font-family: 'Courier New', monospace; padding: 20px; border-radius: 10px; border: 1px solid #111; margin-top: 20px; display: none; white-space: pre-wrap; font-size: 13px; line-height: 1.5; animation: fadeInUp 0.5s; }
+        footer .credits {
+            color: var(--primary-light);
+            font-weight: 600;
+            text-decoration: none;
+        }
 
-        /* SCROLLBAR CUSTOM */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--main); }
+        /* --- ANIMAÇÕES --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; visibility: visible; }
+            to { opacity: 0; visibility: hidden; }
+        }
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
+        /* Notificação */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: -300px;
+            background: var(--success);
+            color: #000;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 10000;
+            transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0,255,136,0.4);
+        }
+        .notification.show { right: 20px; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-card animate__animated animate__zoomIn">
-            <h2 style="font-family:'Orbitron'; color:var(--main); margin-bottom:5px">TERMINAL TH</h2>
-            <p style="color:#444; font-size:12px; margin-bottom:25px">Acesso Restrito ao Desenvolvedor</p>
-            <input type="text" id="master-u" placeholder="USUÁRIO">
-            <input type="password" id="master-p" placeholder="SENHA">
-            <button class="btn" onclick="checkLogin()">AUTENTICAR SISTEMA</button>
+    <!-- TELA DE ENTRADA ANIMADA -->
+    <div id="intro-screen">
+        <h1 class="intro-title">BEM-VINDO À LOJA OFICIAL<br>HYPE ROLEPLAY</h1>
+        <p class="intro-subtitle">Aguarde o carregamento do sistema...</p>
+        <div class="loader"></div>
+    </div>
+
+    <!-- NOTIFICAÇÃO -->
+    <div id="toast" class="notification">Ação processada com sucesso!</div>
+
+    <!-- HEADER & NAVEGAÇÃO -->
+    <header>
+        <div class="logo-area">
+            <!-- LOGO DO ROBLOX -->
+            <div class="logo">
+                <i class="fa-brands fa-roblox"></i> HYPE RP
+            </div>
+            <!-- Botão do Painel Protegido por Senha -->
+            <button class="admin-toggle-btn" onclick="openAdminModalWithPassword()" title="Painel do Dono">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+        </div>
+        <nav class="tabs-container">
+            <button class="tab-btn active" onclick="switchTab(event, 'armas')">
+                <i class="fa-solid fa-gun"></i> Armas
+            </button>
+            <button class="tab-btn" onclick="switchTab(event, 'dinheiro')">
+                <i class="fa-solid fa-money-bill-wave"></i> Dinheiro
+            </button>
+            <button class="tab-btn" onclick="switchTab(event, 'unban')">
+                <i class="fa-solid fa-shield-halved"></i> Retirar Ban
+            </button>
+        </nav>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL (ABAS DE PRODUTOS) -->
+    <main>
+        <div id="armas" class="tab-content active"></div>
+        <div id="dinheiro" class="tab-content"></div>
+        <div id="unban" class="tab-content"></div>
+    </main>
+
+    <!-- ÁREA DE FEEDBACKS REAIS -->
+    <section class="feedbacks-section">
+        <h2 class="section-title">Avaliações dos Cidadãos</h2>
+        
+        <div class="feedback-container">
+            <div class="feedback-form-box">
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px;"><i class="fa-solid fa-pen-to-square"></i> Deixe seu Feedback</h3>
+                <form id="comment-form" onsubmit="submitFeedback(event)">
+                    <div class="form-group">
+                        <label>Seu Nome / ID</label>
+                        <input type="text" id="fb-user" placeholder="Ex: WL_da_Hornet" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Sua Nota</label>
+                        <div class="star-rating-input" id="star-box">
+                            <i class="fa-solid fa-star active" onclick="setRating(1)"></i>
+                            <i class="fa-solid fa-star active" onclick="setRating(2)"></i>
+                            <i class="fa-solid fa-star active" onclick="setRating(3)"></i>
+                            <i class="fa-solid fa-star active" onclick="setRating(4)"></i>
+                            <i class="fa-solid fa-star active" onclick="setRating(5)"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Comentário</label>
+                        <textarea id="fb-text" rows="3" placeholder="O que achou dos nossos produtos e do atendimento?" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-confirm" style="width: 100%;">Postar Avaliação</button>
+                </form>
+            </div>
+
+            <div class="feedbacks-grid" id="real-feedbacks-box">
+                <p style="color: var(--text-muted); font-style: italic;">Carregando avaliações em tempo real...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOTÃO DE SUPORTE VISÍVEL (DIRETO PRO DISCORD) -->
+    <a href="https://discord.gg/" target="_blank" class="support-float-btn">
+        <i class="fa-brands fa-discord fa-lg"></i> Suporte Discord
+    </a>
+
+    <!-- MODAL DE COMPRA DINÂMICO (FORMULÁRIO, PIX, LOADING E SUCESSO) -->
+    <div id="buy-modal" class="modal">
+        <div class="modal-content">
+            
+            <!-- ESTÁGIO 1: FORMULÁRIO DE DADOS -->
+            <div id="payment-stage-form">
+                <h3 class="modal-title" id="modal-product-name">Finalizar Compra</h3>
+                <form id="purchase-form" onsubmit="generatePixStage(event)">
+                    <input type="hidden" id="form-item-id">
+                    <input type="hidden" id="form-item-name">
+                    <input type="hidden" id="form-item-price">
+                    
+                    <div class="form-group">
+                        <label for="user-id">Seu ID In-Game</label>
+                        <input type="number" id="user-id" placeholder="Ex: 1042" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-discord">Seu Discord (Nome ou ID)</label>
+                        <input type="text" id="user-discord" placeholder="Ex: player_hype" required>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                        <button type="submit" class="btn-confirm">Gerar Código Pix</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ESTÁGIO 2: EXIBIÇÃO DA CHAVE PIX COPIA E COLA -->
+            <div id="payment-stage-pix" style="display: none;">
+                <h3 class="modal-title" style="color: var(--pix-color);"><i class="fa-solid fa-qrcode"></i> Pagamento via Pix</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">Copie a chave Pix abaixo para realizar o pagamento do seu pedido.</p>
+                
+                <div class="pix-container">
+                    <div class="pix-header">
+                        <i class="fa-solid fa-copy"></i> Chave Copia e Cola
+                    </div>
+                    <!-- Chave Pix Fictícia configurável -->
+                    <div class="pix-key-box" id="pix-key-text">00020101021126580014br.gov.bcb.pix0136suachavepixaqui2026hype052040000530398654040.005802BR5913HYPE_SYSTEMS6009SAO_PAULO62070503***6304ABCD</div>
+                    
+                    <button type="button" class="btn-pix-copy" onclick="copyPixAndStartLoading()">
+                        <i class="fa-solid fa-bolt"></i> Copiar Chave Pix
+                    </button>
+                </div>
+                
+                <div class="modal-actions" style="margin-top: 25px;">
+                    <button type="button" class="btn-cancel" style="width: 100%;" onclick="closeModal()">Cancelar Pedido</button>
+                </div>
+            </div>
+
+            <!-- ESTÁGIO 3: PROGRES BAR / CARREGANDO 15 SEGUNDOS -->
+            <div id="payment-stage-loading" style="display: none;">
+                <div class="pix-loading-box">
+                    <i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--primary-light);"></i>
+                    <h3 style="margin-top: 15px; font-size: 1.2rem;">Verificando Pagamento...</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">Aguardando a confirmação da API da prefeitura do Hype RP.</p>
+                    
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="pix-progress-fill"></div>
+                    </div>
+                    <span id="progress-timer" style="font-size: 0.8rem; color: var(--primary-light); display: block; margin-top: 8px;">15s restantes</span>
+                </div>
+            </div>
+
+            <!-- ESTÁGIO 4: SUCESSO E DIRECIONAMENTO AO DISCORD -->
+            <div id="payment-stage-success" style="display: none;">
+                <div class="success-box">
+                    <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <h3 style="color: var(--success); font-size: 1.4rem; margin-bottom: 5px;">Obrigado pela Compra!</h3>
+                    <p style="font-size: 0.95rem; margin-bottom: 15px; color: #fff;">
+                        Seu produto: <strong id="success-product-name" style="color: var(--primary-light);">[Item]</strong> foi processado com sucesso.
+                    </p>
+                    
+                    <div style="background: rgba(138, 43, 226, 0.1); border: 1px solid rgba(138, 43, 226, 0.3); padding: 15px; border-radius: 8px; text-align: left; margin-bottom: 20px;">
+                        <p style="font-size: 0.9rem; line-height: 1.5; color: #e0e0e0;">
+                            <i class="fa-solid fa-triangle-exclamation" style="color: #ffd700;"></i> <strong>Aviso Importante:</strong> Para estar resgatando sua compra dentro do jogo, é necessário abrir um ticket no nosso <strong>Discord Oficial</strong> e apresentar os seus dados informados.
+                        </p>
+                    </div>
+
+                    <a href="https://discord.gg/" target="_blank" class="btn-confirm" style="display: block; text-decoration: none; text-align: center; color: #000; padding: 12px;">
+                        <i class="fa-brands fa-discord"></i> Ir para o Discord Oficial
+                    </a>
+                    
+                    <button type="button" class="btn-cancel" style="width: 100%; margin-top: 10px;" onclick="closeModal()">Fechar Janela</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <nav>
-        <div class="logo-box">
-            <h1>TH SYSTEM</h1>
-            <small style="color:#222; font-weight:bold; letter-spacing:3px">V7.9 SUPREME</small>
-        </div>
-        <button class="nav-link active" onclick="openTab(event, 'dash')">📊 DASHBOARD</button>
-        <button class="nav-link" onclick="openTab(event, 'keys')">🔑 GESTÃO DE KEYS</button>
-        <button class="nav-link" onclick="openTab(event, 'staff')">🛡️ EQUIPE STAFF</button>
-        <button class="nav-link" onclick="openTab(event, 'ia')">🤖 IA GENERATOR</button>
-        <div style="margin-top: auto;">
-            <button class="btn btn-red" onclick="location.reload()">SAIR DO TERMINAL</button>
-        </div>
-    </nav>
-
-    <main>
-        <div id="dash" class="tab active">
-            <div class="card animate__animated animate__fadeIn">
-                <span class="title">Status do Servidor</span>
-                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; text-align:center">
-                    <div><h4 style="color:#444; margin:0">CLIENTES ONLINE</h4><h2 id="count-online" style="color:var(--main); margin:10px 0">0</h2></div>
-                    <div><h4 style="color:#444; margin:0">TOTAL DE KEYS</h4><h2 id="count-total" style="color:#fff; margin:10px 0">0</h2></div>
-                    <div><h4 style="color:#444; margin:0">SISTEMA KICK</h4><h2 style="color:var(--main); margin:10px 0">ATIVO ✓</h2></div>
-                </div>
-            </div>
-            <div class="card animate__animated animate__fadeIn" style="animation-delay: 0.2s;">
-                <span class="title">Broadcast Global (Mensagem no Jogo)</span>
-                <input type="text" id="msg-global" placeholder="Digite o aviso que aparecerá para todos no script...">
-                <button class="btn" onclick="sendNotice()">PUBLICAR NO SCRIPT</button>
-            </div>
-        </div>
-
-        <div id="keys" class="tab">
-            <div class="card">
-                <span class="title">Gerar Novo Acesso</span>
-                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px">
-                    <input type="text" id="new-u" placeholder="Nome do Cliente">
-                    <input type="text" id="new-k" placeholder="Key de Acesso">
-                    <select id="new-t">
-                        <option value="1">1 DIA (TESTE)</option>
-                        <option value="7">7 DIAS (SEMANAL)</option>
-                        <option value="30">30 DIAS (MENSAL)</option>
-                        <option value="0">PERMANENTE</option>
-                    </select>
-                </div>
-                <div style="display:flex; gap:10px">
-                    <button class="btn" style="background:#222; color:#fff" onclick="autoFill()">⚡ GERAR ALEATÓRIO</button>
-                    <button class="btn" onclick="createKey()">CADASTRAR NO FIREBASE</button>
-                </div>
+    <!-- MODAL DO DONO -->
+    <div id="admin-modal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h3 class="modal-title" style="color: var(--primary-light);"><i class="fa-solid fa-crown"></i> Painel do Dono</h3>
+            
+            <div style="border-bottom: 1px solid rgba(138, 43, 226, 0.2); padding-bottom: 15px; margin-bottom: 20px;">
+                <h4 style="margin-bottom: 10px; font-size: 1rem;"><i class="fa-solid fa-plus"></i> Adicionar Novo Item</h4>
+                <form id="new-item-form" onsubmit="addNewItem(event)">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="form-group">
+                            <label>Nome do Item</label>
+                            <input type="text" id="new-name" placeholder="Ex: Colete Pesado" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Preço (R$)</label>
+                            <input type="text" id="new-price" placeholder="Ex: 10.00" required>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="form-group">
+                            <label>Aba / Categoria</label>
+                            <select id="new-category">
+                                <option value="armas">Armas</option>
+                                <option value="dinheiro">Dinheiro</option>
+                                <option value="unban">Retirar Ban</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Estoque Inicial</label>
+                            <input type="number" id="new-stock" value="10" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição do Produto</label>
+                        <textarea id="new-desc" rows="2" placeholder="Descreva os detalhes..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-confirm" style="width: 100%;">Adicionar Produto</button>
+                </form>
             </div>
 
-            <div class="card">
-                <span class="title">Controle de Usuários & Kick Real-Time</span>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>CLIENTE</th>
-                            <th>KEY</th>
-                            <th>USO</th>
-                            <th>AÇÕES</th>
-                        </tr>
-                    </thead>
-                    <tbody id="user-table"></tbody>
-                </table>
+            <div>
+                <h4 style="margin-bottom: 10px; font-size: 1rem;"><i class="fa-solid fa-boxes-stacked"></i> Gerenciar Estoques Atuais</h4>
+                <div id="admin-stock-list" style="max-height: 180px; overflow-y: auto; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;"></div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeAdminModal()">Fechar Painel</button>
             </div>
         </div>
+    </div>
 
-        <div id="staff" class="tab">
-            <div class="card">
-                <span class="title">Adicionar Moderador / Vendedor</span>
-                <input type="text" id="st-u" placeholder="Login do Staff">
-                <input type="password" id="st-p" placeholder="Senha do Staff">
-                <select id="st-c">
-                    <option value="vendedor">VENDEDOR</option>
-                    <option value="admin">ADMINISTRADOR</option>
-                </select>
-                <button class="btn" onclick="addStaff()">CADASTRAR STAFF</button>
-            </div>
-            <div class="card">
-                <table><tbody id="staff-table"></tbody></table>
-            </div>
-        </div>
+    <!-- FOOTER COM CRÉDITOS -->
+    <footer>
+        <p>&copy; 2026 Hype Roleplay. Todos os direitos reservados.</p>
+        <p style="margin-top: 5px; font-size: 0.8rem;">Desenvolvido por <a class="credits" href="#">MENDDSZ</a> | HYPE RP OFICIAL</p>
+    </footer>
 
-        <div id="ia" class="tab">
-            <div class="card">
-                <span class="title">Gerador de Remotes (TH-AI)</span>
-                <input type="text" id="ia-prompt" placeholder="Ex: Criar um Farm de Dinheiro automático para o jogo tal...">
-                <button class="btn" onclick="generateAI()">GERAR CÓDIGO LUA</button>
-                <div id="ai-result"></div>
-                <button id="btn-copy-ia" class="btn" style="display:none; margin-top:10px; background:#222; color:#fff" onclick="copyIA()">COPIAR SCRIPT</button>
-            </div>
-        </div>
-    </main>
-
+    <!-- LOGIC SYSTEM & FIREBASE CONNECT -->
     <script>
-        const firebaseConfig = { databaseURL: "https://th-system-database-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        // URLs do Firebase Realtime Database
+        const VENDAS_URL = "https://th-system-database-default-rtdb.firebaseio.com/vendas.json";
+        const FEEDBACKS_URL = "https://th-system-database-default-rtdb.firebaseio.com/feedbacks.json";
 
-        function checkLogin() {
-            const u = document.getElementById('master-u').value;
-            const p = document.getElementById('master-p').value;
-            if(u === "TH" && p === "SYSTEM") {
-                document.getElementById('login-screen').classList.replace('animate__zoomIn', 'animate__fadeOut');
-                setTimeout(() => { document.getElementById('login-screen').style.display = 'none'; }, 500);
-                initSystem();
-            } else { alert("Acesso Negado!"); }
+        // Senha de proteção do Painel de Administração
+        const SENHA_ADMIN = "admin123"; 
+
+        let currentRating = 5;
+
+        // Base de dados de produtos
+        let listaProdutos = [
+            { id: 1, categoria: "armas", icone: "fa-gun", titulo: "Combo Fuzil + Munição", desc: "Receba 1x Fuzil de Assalto de última geração acompanhado de 250 projéteis direto no seu inventário.", preco: "35.00", estoque: 5 },
+            { id: 2, categoria: "armas", icone: "fa-handgun", titulo: "Pistola Glock", desc: "Arma compacta e ágil para defesa pessoal ou ações rápidas na cidade. Acompanha 100 balas.", preco: "15.00", estoque: 12 },
+            { id: 3, categoria: "dinheiro", icone: "fa-sack-dollar", titulo: "R$ 500.000 Sujo", desc: "Maleta contendo meio milhão de reais em dinheiro sujo. Ideal para movimentar facções.", preco: "20.00", estoque: 8 },
+            { id: 4, categoria: "dinheiro", icone: "fa-vault", titulo: "R$ 1.000.000 Limpo", desc: "Dinheiro totalmente limpo e depositado diretamente na sua conta do banco in-game de forma segura.", preco: "45.00", estoque: 3 },
+            { id: 5, categoria: "unban", icone: "fa-unlock-keyhole", titulo: "Unban Padrão", desc: "Errou e foi punido? Remova o banimento da sua ID/Prefeitura e volte a jogar imediatamente.", preco: "50.00", estoque: 99 }
+        ];
+
+        // Renderizar Produtos na Tela de Forma Dinâmica
+        function renderizarProdutos() {
+            document.getElementById('armas').innerHTML = "";
+            document.getElementById('dinheiro').innerHTML = "";
+            document.getElementById('unban').innerHTML = "";
+
+            listaProdutos.forEach(prod => {
+                const containeraba = document.getElementById(prod.categoria);
+                if (!containeraba) return;
+
+                const estaEsgotado = prod.estoque <= 0;
+
+                const cardHtml = `
+                    <div class="product-card" id="card-prod-${prod.id}">
+                        <div>
+                            <div class="product-icon"><i class="fa-solid ${prod.icone || 'fa-box'}"></i></div>
+                            <h3 class="product-title">${prod.titulo}</h3>
+                            <p class="product-desc">${prod.desc}</p>
+                            <div class="product-stock">
+                                <i class="fa-solid fa-boxes-stacked"></i> Estoque: ${estaEsgotado ? '<span style="color:var(--danger)">Esgotado</span>' : prod.estoque}
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <span class="product-price">R$ ${prod.preco}</span>
+                            <button class="buy-btn" ${estaEsgotado ? 'disabled' : ''} onclick="openModal('${prod.id}', '${prod.titulo}', '${prod.preco}')">
+                                ${estaEsgotado ? 'Sem Estoque' : 'Comprar'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                containeraba.innerHTML += cardHtml;
+            });
         }
 
-        function openTab(e, id) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+        // Sistema de verificação de senha
+        function openAdminModalWithPassword() {
+            const senhaDigitada = prompt("Digite a senha do Painel do Dono para continuar:");
+            if (senhaDigitada === null) return; 
+            
+            if (senhaDigitada === hyperp) {
+                openAdminModal();
+            } else {
+                alert("Senha incorreta! Acesso negado.");
+            }
+        }
+
+        // Puxar feedbacks reais salvos na nuvem
+        function carregarFeedbacksReais() {
+            fetch(FEEDBACKS_URL)
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('real-feedbacks-box');
+                container.innerHTML = "";
+
+                if (!data) {
+                    container.innerHTML = `<p style="color: var(--text-muted); font-style: italic;">Nenhuma avaliação postada ainda. Seja o primeiro!</p>`;
+                    return;
+                }
+
+                Object.keys(data).reverse().forEach(key => {
+                    const fb = data[key];
+                    let estrelasHtml = "";
+                    for(let i=1; i<=5; i++) {
+                        estrelasHtml += i <= fb.nota ? `<i class="fa-solid fa-star"></i>` : `<i class="fa-regular fa-star"></i>`;
+                    }
+
+                    const card = `
+                        <div class="feedback-card">
+                            <div class="feedback-header">
+                                <span class="feedback-user"><i class="fa-solid fa-user"></i> ${fb.usuario}</span>
+                                <span class="feedback-stars">${estrelasHtml}</span>
+                            </div>
+                            <p class="feedback-text">"${fb.comentario}"</p>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            })
+            .catch(err => console.error("Erro ao carregar feedbacks:", err));
+        }
+
+        function setRating(nota) {
+            currentRating = nota;
+            const stars = document.querySelectorAll('#star-box i');
+            stars.forEach((star, index) => {
+                if (index < nota) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function submitFeedback(e) {
+            e.preventDefault();
+            const user = document.getElementById('fb-user').value;
+            const text = document.getElementById('fb-text').value;
+
+            const novoFeedback = {
+                usuario: user,
+                nota: currentRating,
+                comentario: text,
+                data: new Date().toLocaleDateString("pt-BR")
+            };
+
+            fetch(FEEDBACKS_URL, {
+                method: "POST",
+                body: JSON.stringify(novoFeedback),
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => {
+                if(res.ok) {
+                    document.getElementById('comment-form').reset();
+                    setRating(5);
+                    showToast();
+                    carregarFeedbacksReais();
+                }
+            });
+        }
+
+        // Estágio 2: Transiciona para os dados do Pix copia e cola
+        function generatePixStage(event) {
+            event.preventDefault();
+            
+            // Troca de telas internas no Modal
+            document.getElementById('payment-stage-form').style.display = 'none';
+            document.getElementById('payment-stage-pix').style.display = 'block';
+        }
+
+        // Copia a Chave Pix e Inicia a contagem de 15 segundos
+        function copyPixAndStartLoading() {
+            const pixText = document.getElementById('pix-key-text').innerText;
+            
+            // Copia para a área de transferência do usuário
+            navigator.clipboard.writeText(pixText).then(() => {
+                alert("Chave Pix Copiada com sucesso!");
+                
+                // Transiciona para a tela de carregamento de 15s
+                document.getElementById('payment-stage-pix').style.display = 'none';
+                document.getElementById('payment-stage-loading').style.display = 'block';
+                
+                startFifteenSecondsTimer();
+            }).catch(err => {
+                console.error("Erro ao copiar", err);
+                // Caso falhe o clipboard, inicia o fluxo mesmo assim
+                document.getElementById('payment-stage-pix').style.display = 'none';
+                document.getElementById('payment-stage-loading').style.display = 'block';
+                startFifteenSecondsTimer();
+            });
+        }
+
+        // Cronômetro e Barra de Progresso Real de 15 segundos
+        function startFifteenSecondsTimer() {
+            const progressBar = document.getElementById('pix-progress-fill');
+            const timerText = document.getElementById('progress-timer');
+            
+            let tempoRestante = 15; // 15 Segundos solicitados
+            progressBar.style.width = '0%';
+            timerText.innerText = `${tempoRestante}s restantes`;
+
+            const intervalo = setInterval(() => {
+                tempoRestante--;
+                let porcentagem = ((15 - tempoRestante) / 15) * 100;
+                
+                progressBar.style.width = `${porcentagem}%`;
+                timerText.innerText = `${tempoRestante}s restantes`;
+
+                if(tempoRestante <= 0) {
+                    clearInterval(intervalo);
+                    finalizePurchaseAndShowSuccess();
+                }
+            }, 1000);
+        }
+
+        // Finaliza enviando pro banco e joga o resultado na tela com as instruções do ticket do discord
+        function finalizePurchaseAndShowSuccess() {
+            const pId = parseInt(document.getElementById('form-item-id').value);
+            const item = document.getElementById('form-item-name').value;
+            const preco = document.getElementById('form-item-price').value;
+            const idPlayer = document.getElementById('user-id').value;
+            const discordPlayer = document.getElementById('user-discord').value;
+
+            const produtoMatch = listaProdutos.find(p => p.id === pId);
+            if (produtoMatch) {
+                if (produtoMatch.estoque <= 0) {
+                    alert("Aparelho ou item esgotado!");
+                    closeModal();
+                    return;
+                }
+                produtoMatch.estoque -= 1;
+            }
+
+            const dadosVenda = {
+                produto: item,
+                valor: `R$ ${preco}`,
+                id_comprador: idPlayer,
+                discord: discordPlayer,
+                data_hora: new Date().toLocaleString("pt-BR"),
+                status: "Pago (Aguardando Retirada)"
+            };
+
+            fetch(VENDAS_URL, {
+                method: "POST",
+                body: JSON.stringify(dadosVenda),
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(response => {
+                if(response.ok) {
+                    renderizarProdutos();
+                    showToast();
+                    
+                    // Altera os dados da tela final de sucesso
+                    document.getElementById('success-product-name').innerText = item;
+                    
+                    // Transiciona para o Estágio Final (Sucesso)
+                    document.getElementById('payment-stage-loading').style.display = 'none';
+                    document.getElementById('payment-stage-success').style.display = 'block';
+                }
+            });
+        }
+
+        function switchTab(e, tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
             e.currentTarget.classList.add('active');
         }
 
-        function autoFill() {
-            document.getElementById('new-u').value = "USER-" + Math.floor(1000 + Math.random() * 9000);
-            document.getElementById('new-k').value = "TH-" + Math.random().toString(36).substring(2, 9).toUpperCase();
+        function openModal(id, itemName, itemPrice) {
+            // Garante que o modal abre resetado no Estágio 1
+            document.getElementById('payment-stage-form').style.display = 'block';
+            document.getElementById('payment-stage-pix').style.display = 'none';
+            document.getElementById('payment-stage-loading').style.display = 'none';
+            document.getElementById('payment-stage-success').style.display = 'none';
+
+            document.getElementById('modal-product-name').innerText = `Comprar: ${itemName}`;
+            document.getElementById('form-item-id').value = id;
+            document.getElementById('form-item-name').value = itemName;
+            document.getElementById('form-item-price').value = itemPrice;
+            document.getElementById('buy-modal').style.display = 'flex';
         }
 
-        function createKey() {
-            const u = document.getElementById('new-u').value;
-            const k = document.getElementById('new-k').value;
-            const t = parseInt(document.getElementById('new-t').value);
-            if(!u || !k) return alert("Preencha tudo!");
-            
-            const exp = t === 0 ? 0 : Date.now() + (t * 86400000);
-            db.ref('users/' + u).set({
-                key: k,
-                expiry: exp,
-                isUsing: false,
-                plan: t === 0 ? "PERMANENTE" : t + " DIAS"
-            }).then(() => { alert("Key Criada com Sucesso!"); autoFill(); });
+        function closeModal() {
+            document.getElementById('buy-modal').style.display = 'none';
+            document.getElementById('purchase-form').reset();
         }
 
-        function initSystem() {
-            db.ref('users').on('value', snap => {
-                const table = document.getElementById('user-table');
-                table.innerHTML = "";
-                let total = 0; let online = 0;
-                const agora = Date.now();
+        function openAdminModal() {
+            const listContainer = document.getElementById('admin-stock-list');
+            listContainer.innerHTML = "";
+            listaProdutos.forEach(p => {
+                listContainer.innerHTML += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-size:0.9rem;">${p.titulo}</span>
+                        <input type="number" value="${p.estoque}" onchange="updateStockDirectly(${p.id}, this.value)" style="width:70px; text-align:center; background:#000; border:1px solid var(--primary); color:#fff; border-radius:4px;">
+                    </div>
+                `;
+            });
+            document.getElementById('admin-modal').style.display = 'flex';
+        }
 
-                snap.forEach(user => {
-                    const data = user.val();
-                    if(data.expiry !== 0 && agora > data.expiry) {
-                        db.ref('users/' + user.key).remove();
-                    } else {
-                        total++;
-                        if(data.isUsing) online++;
-                        
-                        table.innerHTML += `
-                            <tr>
-                                <td><b>${user.key}</b></td>
-                                <td><span class="code">${data.key}</span></td>
-                                <td>
-                                    <span class="status-dot ${data.isUsing?'online':'offline'}"></span>
-                                    <small style="color:${data.isUsing?'#00ff88':'#444'}">${data.isUsing?'EM USO':'OFFLINE'}</small>
-                                </td>
-                                <td>
-                                    <button class="btn" style="width:auto; padding:5px 10px; font-size:10px" onclick="copyText('${data.key}')">COPIAR</button>
-                                    <button class="btn btn-red" style="width:auto; padding:5px 10px; font-size:10px" onclick="if(confirm('DAR KICK E BANIR?')){ db.ref('users/${user.key}').remove() }">BANIR / KICK</button>
-                                </td>
-                            </tr>
-                        `;
-                    }
-                });
-                document.getElementById('count-total').innerText = total;
-                document.getElementById('count-online').innerText = online;
+        function closeAdminModal() { document.getElementById('admin-modal').style.display = 'none'; }
+
+        function updateStockDirectly(id, val) {
+            const prod = listaProdutos.find(p => p.id === parseInt(id));
+            if(prod) { prod.estoque = Math.max(0, parseInt(val) || 0); renderizarProdutos(); }
+        }
+
+        function addNewItem(e) {
+            e.preventDefault();
+            const name = document.getElementById('new-name').value;
+            const price = document.getElementById('new-price').value;
+            const cat = document.getElementById('new-category').value;
+            const stock = document.getElementById('new-stock').value;
+            const desc = document.getElementById('new-desc').value;
+
+            listaProdutos.push({
+                id: Date.now(),
+                categoria: cat,
+                icone: cat === 'armas' ? 'fa-gun' : cat === 'dinheiro' ? 'fa-money-bill-wave' : 'fa-shield-halved',
+                titulo: name,
+                desc: desc,
+                preco: price,
+                estoque: Math.max(0, parseInt(stock) || 0)
             });
 
-            db.ref('staff').on('value', snap => {
-                const table = document.getElementById('staff-table');
-                table.innerHTML = "";
-                snap.forEach(s => {
-                    table.innerHTML += `<tr><td>${s.key}</td><td>${s.val().cargo.toUpperCase()}</td><td><button class="btn btn-red" onclick="db.ref('staff/${s.key}').remove()">REMOVER</button></td></tr>`;
-                });
-            });
+            document.getElementById('new-item-form').reset();
+            renderizarProdutos();
+            openAdminModal();
         }
 
-        function addStaff() {
-            const u = document.getElementById('st-u').value;
-            const p = document.getElementById('st-p').value;
-            const c = document.getElementById('st-c').value;
-            if(u && p) db.ref('staff/' + u).set({ pass: p, cargo: c });
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
         }
 
-        function sendNotice() {
-            const msg = document.getElementById('msg-global').value;
-            db.ref('settings/announcement').set(msg).then(() => alert("Aviso enviado!"));
-        }
-
-        function generateAI() {
-            const prompt = document.getElementById('ia-prompt').value;
-            const result = document.getElementById('ai-result');
-            if(!prompt) return;
-            
-            result.style.display = "block";
-            document.getElementById('btn-copy-ia').style.display = "block";
-            result.innerText = `-- [[ TH IA GENERATOR V2 ]]\n-- Sugestão de Código para: ${prompt}\n\nlocal Remote = game:GetService("ReplicatedStorage"):WaitForChild("MainEvent")\n\nwhile task.wait(1) do\n    Remote:FireServer("Farm", "${prompt}")\nend\n\nprint("Script Gerado com Sucesso por TH SYSTEM")`;
-        }
-
-        function copyIA() {
-            navigator.clipboard.writeText(document.getElementById('ai-result').innerText);
-            alert("Código Lua Copiado!");
-        }
-
-        function copyText(txt) {
-            navigator.clipboard.writeText(txt);
-            alert("Key Copiada!");
-        }
+        setTimeout(() => { document.getElementById('intro-screen').style.display = 'none'; }, 3200);
+        
+        renderizarProdutos();
+        carregarFeedbacksReais();
     </script>
 </body>
 </html>
