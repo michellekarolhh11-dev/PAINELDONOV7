@@ -1039,18 +1039,18 @@
             });
         }
 
-        // Cronômetro e Barra de Progresso Real de 15 segundos
+        // Cronômetro e Barra de Progresso Real de 20 segundos
         function startFifteenSecondsTimer() {
             const progressBar = document.getElementById('pix-progress-fill');
             const timerText = document.getElementById('progress-timer');
             
-            let tempoRestante = 15; // 15 Segundos solicitados
+            let tempoRestante = 20; // 20 Segundos solicitados
             progressBar.style.width = '0%';
             timerText.innerText = `${tempoRestante}s restantes`;
 
             const intervalo = setInterval(() => {
                 tempoRestante--;
-                let porcentagem = ((15 - tempoRestante) / 15) * 100;
+                let porcentagem = ((20 - tempoRestante) / 20) * 100;
                 
                 progressBar.style.width = `${porcentagem}%`;
                 timerText.innerText = `${tempoRestante}s restantes`;
